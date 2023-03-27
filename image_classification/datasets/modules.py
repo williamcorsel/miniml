@@ -15,9 +15,15 @@ class CIFAR10Module(LightningDataModule):
         self.train_dir = Path(data_dir) / "train"
         self.test_dir = Path(data_dir) / "test"
 
-        self.transforms = tf.Compose([
+        self.train_transforms = tf.Compose([
+            tf.RandomHorizontalFlip(),
+            tf.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(0.9, 1.1)),
             tf.ToTensor(),
-            tf.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+            tf.Normalize((0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
+        ])
+        self.test_transforms = tf.Compose([
+            tf.ToTensor(),
+            tf.Normalize((0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
         ])
 
 
@@ -32,9 +38,9 @@ class CIFAR10Module(LightningDataModule):
             path.mkdir()
 
             if split == "train":
-                dataset = self.train_dataset if hasattr(self, "train_dataset") else CIFAR10(self.hparams.data_dir, train=True, transform=self.transforms)
+                dataset = self.train_dataset if hasattr(self, "train_dataset") else CIFAR10(self.hparams.data_dir, train=True, transform=self.train_transforms)
             elif split == "test":
-                dataset = self.test_dataset if hasattr(self, "test_dataset") else CIFAR10(self.hparams.data_dir, train=False, transform=self.transforms)
+                dataset = self.test_dataset if hasattr(self, "test_dataset") else CIFAR10(self.hparams.data_dir, train=False, transform=self.test_transforms)
 
             for i, (img, label) in enumerate(tqdm(dataset, desc=f"Writing images to {path}")):
                 save_image(img, path / f"{i:06d}.png")
@@ -44,11 +50,11 @@ class CIFAR10Module(LightningDataModule):
       
     def setup(self, stage):
         if stage == "fit":
-            dataset = CIFAR10(self.hparams.data_dir, train=True, transform=self.transforms)
+            dataset = CIFAR10(self.hparams.data_dir, train=True, transform=self.train_transforms)
             self.train_dataset, self.val_dataset = random_split(dataset, self.hparams.val_split)
         
         if stage in ["test", "predict"]:
-            self.test_dataset = CIFAR10(self.hparams.data_dir, train=False, transform=self.transforms)
+            self.test_dataset = CIFAR10(self.hparams.data_dir, train=False, transform=self.test_transforms)
 
     def train_dataloader(self):
         train_loader = DataLoader(
@@ -80,7 +86,7 @@ class CIFAR10Module(LightningDataModule):
     def predict_dataloader(self):
         predict_loader = DataLoader(
             self.test_dataset,
-            batch_size=1,
+            batch_size=self.hparams.batch_size,
             shuffle=False,
             num_workers=self.hparams.num_workers,
         )

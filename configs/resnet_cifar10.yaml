@@ -1,0 +1,29 @@
+# lightning.pytorch==2.0.0
+seed_everything: 42
+trainer:
+  default_root_dir: experiments
+  # logger: 
+  #   class_path: lightning.pytorch.loggers.csv_logs.CSVLogger
+  #   init_args:
+  #     save_dir: experiments
+  #     name: resnet_cifar10
+  callbacks: 
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        save_last: true
+        monitor: val_loss
+  max_epochs: 100
+model:
+  class_path: image_classification.models.modules.ResNetModule
+  init_args:
+    num_classes: 10
+    lr: 0.001
+data:
+  class_path: image_classification.datasets.modules.CIFAR10Module
+  init_args:
+    data_dir: data
+    batch_size: 256
+    num_workers: 12
+    val_split:
+    - 0.8
+    - 0.2

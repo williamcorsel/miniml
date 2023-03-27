@@ -1,6 +1,7 @@
 # User-Defined
 data
 lightning_logs
+experiments
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
