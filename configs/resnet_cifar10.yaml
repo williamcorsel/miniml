@@ -11,7 +11,8 @@ trainer:
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
         save_last: true
-        monitor: val_loss
+        monitor: val_acc
+        mode: max
   max_epochs: 100
 model:
   class_path: image_classification.models.modules.ResNetModule

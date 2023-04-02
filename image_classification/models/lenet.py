@@ -1,5 +1,5 @@
 import torch
-from torch.nn import Module, Conv2d, Linear, MaxPool2d, ReLU
+from torch.nn import Conv2d, Linear, MaxPool2d, Module, ReLU
 
 
 class LeNetBackbone(Module):

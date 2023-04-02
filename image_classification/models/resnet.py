@@ -1,6 +1,8 @@
 import torch
-from torch.nn import Module, Conv2d, Linear, MaxPool2d, ReLU, BatchNorm2d, Sequential, AdaptiveAvgPool2d
 import torch.nn.functional as F
+from torch.nn import (AdaptiveAvgPool2d, BatchNorm2d, Conv2d, Linear,
+                      MaxPool2d, Module, ReLU, Sequential)
+
 
 class ResNetBlock(Module):
     def __init__(self, inplanes, planes, stride=1, downsample=None):

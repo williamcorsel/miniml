@@ -1,14 +1,15 @@
-from lightning.pytorch import LightningDataModule
-from torchvision.datasets import CIFAR10
-from torchvision import transforms as tf
-from torchvision.utils import save_image
-from torch.utils.data import DataLoader, random_split
 from pathlib import Path
+
+from lightning.pytorch import LightningDataModule
+from torch.utils.data import DataLoader, random_split
+from torchvision import transforms as tf
+from torchvision.datasets import CIFAR10
+from torchvision.utils import save_image
 from tqdm import tqdm
-from PIL import Image
+
 
 class CIFAR10Module(LightningDataModule):
-    def __init__(self, data_dir="data", batch_size=32, num_workers=4, val_split=[0.8, 0.2]):
+    def __init__(self, data_dir="data", batch_size=2, num_workers=4, val_split=[0.8, 0.2]):
         super().__init__()
         self.save_hyperparameters()
 

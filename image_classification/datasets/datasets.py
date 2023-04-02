@@ -1,7 +1,7 @@
-import torch
-from torch.utils.data import Dataset, random_split, DataLoader
-from PIL import Image
 from lightning.pytorch import LightningDataModule
+from PIL import Image
+from torch.utils.data import DataLoader, Dataset, random_split
+
 
 class FiftyOneClassificationDataset(Dataset):
     """A class to construct a PyTorch dataset from a FiftyOne dataset.

@@ -1,16 +1,17 @@
 # lightning.pytorch==2.0.0
 seed_everything: 42
 trainer:
-  logger: 
-    class_path: lightning.pytorch.loggers.csv_logs.CSVLogger
-    init_args:
-      save_dir: experiments
-      name: "lenet_cifar10"
+  # logger: 
+  #   class_path: lightning.pytorch.loggers.csv_logs.CSVLogger
+  #   init_args:
+  #     save_dir: experiments
+  #     name: "lenet_cifar10"
   callbacks: 
     - class_path: lightning.pytorch.callbacks.ModelCheckpoint
       init_args:
         save_last: true
-        monitor: val_loss
+        monitor: val_acc
+        mode: max
   max_epochs: 5
 model:
   class_path: image_classification.models.modules.LeNetModule

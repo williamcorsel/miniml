@@ -1,13 +1,13 @@
-from torchmetrics.functional import accuracy
-from lightning.pytorch import LightningModule
 import torch
-from torch.optim import SGD
-from torch.nn import CrossEntropyLoss, NLLLoss
-from torchmetrics.functional import accuracy
-from torch.optim.lr_scheduler import OneCycleLR
 import torch.nn.functional as F
+from lightning.pytorch import LightningModule
+from torch.nn import CrossEntropyLoss
+from torch.optim import SGD
+from torch.optim.lr_scheduler import OneCycleLR
+from torchmetrics.functional import accuracy
 
 from . import *
+
 
 class LeNetModule(LightningModule):
     def __init__(self, 
@@ -69,8 +69,8 @@ class LeNetModule(LightningModule):
 
 
 def create_model():
-    import torchvision
     import torch.nn as nn
+    import torchvision
     model = torchvision.models.resnet18(pretrained=False, num_classes=10)
     model.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
     model.maxpool = nn.Identity()
@@ -84,18 +84,11 @@ class ResNetModule(LightningModule):
         ):
         super().__init__()
         self.save_hyperparameters()
-        # self.model = create_model()
-        # self.loss = NLLLoss()
         self.model = ResNet(num_classes=num_classes)
         self.loss = CrossEntropyLoss()
 
-    # def forward(self, x):
-    #     out = self.model(x)
-    #     return F.log_softmax(out, dim=1)
-
     def training_step(self, batch, batch_idx):
         imgs, labels = batch
-        # logits = self(imgs)
         logits = self.model(imgs)
         loss = self.loss(logits, labels)
         self.log("train_loss", loss)
@@ -103,7 +96,6 @@ class ResNetModule(LightningModule):
     
     def evaluate(self, batch, stage=None):
         imgs, labels = batch
-        # logits = self(imgs)
         logits = self.model(imgs)
         loss = self.loss(logits, labels)
         preds = torch.argmax(logits, dim=1)

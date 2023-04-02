@@ -1,11 +1,13 @@
+from pathlib import Path
+
 import fiftyone as fo
+from lightning.pytorch.cli import LightningCLI
 from torchvision.utils import save_image
 from tqdm import tqdm
-from pathlib import Path
-from lightning.pytorch.cli import LightningCLI
 
-from image_classification.models.modules import *
 from image_classification.datasets.modules import *
+from image_classification.models.modules import *
+
 
 def to_fiftyone(dataset, dataset_dir, name, preds=None):
     samples = []
